@@ -205,6 +205,9 @@ Parse.Cloud.beforeSave("Answer", function(request, response) {
 				success: function(voteObj) {
 					// Execute any logic that should take place after the object is saved.
 					console.log('New object created with objectId: ' + voteObj.id);
+					//var voteRelation = request.object.relation("votes");
+					//voteRelation.add(voteObj);
+					//console.log('Added vote relation');
 				},
 				error: function(voteObj, error) {
 					// Execute any logic that should take place if the save fails.
@@ -216,6 +219,28 @@ Parse.Cloud.beforeSave("Answer", function(request, response) {
 	}
 
 	response.success();
+});
+
+Parse.Cloud.afterSave("Vote", function(request) {
+	//console.log("inside question aftersave,"+request.object.id);
+	Parse.Cloud.useMasterKey();
+	//console.log("Object didn't exist");
+	//var user = Parse.User.current();
+	var ansObj = request.object.get("ans");
+
+	//console.log("user,"+user);
+	//console.log("user,"+user.id);
+
+	//Update user's question count (for notification)
+	if (typeof(ansObj)!="undefined" &&  ansObj != null)
+	{
+		var voteRelation = ansObj.relation("votes");
+		voteRelation.add(request.object);
+		ansObj.save();
+		console.log('Added vote relation');
+		
+	}
+
 });
 
 
@@ -286,6 +311,11 @@ Parse.Cloud.define("votedAns", function(request, response) {
 			var ans3Obj = result.get("answer3");
 			var ans4Obj = result.get("answer4");
 			var ans5Obj = result.get("answer5");
+			
+			if (typeof(ans1Obj) != "undefined"){
+				console.log("Answer 1 defined,"+ans1Obj.getRelation('votes'));
+			}
+			/*
 			if (typeof(ans1Obj) != "undefined"){
 				//console.log("Answer 1 defined,");
 				if(ans1Obj.get('voters'))
@@ -315,7 +345,7 @@ Parse.Cloud.define("votedAns", function(request, response) {
 				if(ans5Obj.get('voters'))
 					if (ans5Obj.get('voters').indexOf(request.params.userid) != -1)
 						ansno = 5;
-			}
+			}*/
 			response.success(ansno);
 		},
 		error: function() {
@@ -323,3 +353,4 @@ Parse.Cloud.define("votedAns", function(request, response) {
 		}
 	});
 });
+

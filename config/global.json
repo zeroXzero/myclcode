@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "_default": {
+            "link": "odiyan"
+        }, 
+        "odiyan": {
+            "applicationId": "KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke", 
+            "masterKey": "ZEC8M4LjjycgnsfaEUqzq1iE9GqMDsAkUmA5yzio"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.19"
+    }
+}

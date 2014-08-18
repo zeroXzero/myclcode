@@ -1,0 +1,21 @@
+<ion-view title="Project41" hide-back-button="true"  hide-nav-bar="false">
+
+    <ion-content has-header="true" padding="true" style="width:600px;">
+
+        <ion-list>
+            <ion-item ng-repeat="item in cats">
+                <h2>{{item}}</h2>
+            </ion-item>
+        </ion-list>
+
+        <br/>
+        <label class="item item-input">
+            <input type="text" placeholder="Enter new Category" ng-model="newCat.name">
+        </label>
+
+        <div class="padding">
+            <button nav-clear class="button button-block button-positive" ng-click="create(newCat.name)">Add</button>
+        </div>
+    </ion-content>
+
+</ion-view>

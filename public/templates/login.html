@@ -1,0 +1,32 @@
+<ion-view title="Project41" hide-back-button="true"  hide-nav-bar="false">
+
+    <ion-content has-header="true" padding="true" style="width:400px;">
+
+
+        <div class="list list-inset">
+
+            <form name="loginForm" ng-submit="login(user)">
+                <label class="item item-input">
+                    <input type="email" placeholder="someone@example.com" ng-model="user.email" required name="email">
+                </label>
+                <label class="item item-input">
+                    <input type="password" placeholder="Password" ng-model="user.password" required name="password">
+                </label>
+
+                <div class="padding">
+                    <button type="submit" class="button button-dark button-block button-primary">Login</button>
+                </div>
+            </form>
+            <br/>
+
+            <div class="padding">
+                <button nav-clear class="button button-block button-positive" ng-click="facebookLogin()">
+                    <i class="icon ion-social-facebook"></i>
+                    &nbsp;Login with Facebook
+                </button>
+            </div>
+        </div>
+
+    </ion-content>
+
+</ion-view>

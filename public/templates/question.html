@@ -1,0 +1,39 @@
+<ion-view hide-back-button="true" title="New Question"  hide-nav-bar="false">
+    <ion-content style="width:600px;">
+        <div class="list list-inset">
+
+            <label class="item item-input">
+                <textarea placeholder="Enter your question in 150 letters" maxlength="150" ng-model="question.data" style="height: 100px;"></textarea>
+            </label>
+            <br/>
+            <label class="item item-input">
+                <input type="text" placeholder="Answer 1" ng-model="question.answer1">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Answer 2" ng-model="question.answer2">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Answer 3" ng-model="question.answer3">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Answer 4" ng-model="question.answer4">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Answer 5" ng-model="question.answer5">
+            </label>
+
+            <button class="button button-dark button-block" ng-click="askQuestion()">Ask</button>
+            <br/>
+            <div class="item item-divider">
+                Select category
+            </div>
+            <ion-radio ng-repeat="item in cats"
+                       ng-value="item.id"
+                       ng-model="question.cat">
+                {{ item.name }}
+            </ion-radio>
+
+            <br/>
+        </div>
+    </ion-content>
+</ion-view>

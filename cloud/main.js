@@ -24,7 +24,7 @@ Parse.Cloud.afterSave("Question", function(request) {
 		var ans4Obj = request.object.get("answer4");
 		var ans5Obj = request.object.get("answer5");
 		var qs = new Ques();
-		var updusr = new Usr();
+		//var updusr = new Usr();
 		qs.id = request.object.id;
 		var user = Parse.User.current();
 
@@ -34,9 +34,14 @@ Parse.Cloud.afterSave("Question", function(request) {
 		//Update user's question count (for notification)
 		if (typeof(user) != "undefined" && user != null)
 		{
-			updusr.id = user.id;
-			updusr.increment('qstnCnt');
-			updusr.save();
+				
+						//console.log("Trying user fetch,"+Parse.User.current().get("notifPtr"));
+						var notifObj = Parse.User.current().get('notifPtr');
+						if (typeof(notifObj) != "undefined"){
+								notifObj.increment('qstnCnt');
+								notifObj.save();
+						}
+				
 		}
 
 		if (typeof(ans1Obj) != "undefined"){
@@ -111,7 +116,7 @@ Parse.Cloud.beforeSave("Answer", function(request, response) {
 
 	var user = Parse.User.current();
 	var Usr = Parse.Object.extend("User");
-	var updusr = new Usr();
+	//var updusr = new Usr();
 
 	//console.log("Dirty count,"+request.object.dirty("count"));
 	//console.log("Current count,"+request.object.get("count"));
@@ -150,9 +155,17 @@ Parse.Cloud.beforeSave("Answer", function(request, response) {
 			{
 				//Update user's answer count (for notification)
 				{
-					updusr.id = user.id;
-					updusr.increment('ansCnt');
-					updusr.save();
+					/*
+					   updusr.id = user.id;
+					   updusr.increment('ansCnt');
+					   updusr.save();
+					   */
+						//console.log("Trying user fetch,"+Parse.User.current().get("notifPtr"));
+						var notifObj = Parse.User.current().get('notifPtr');
+						if (typeof(notifObj) != "undefined"){
+								notifObj.increment('ansCnt');
+								notifObj.save();
+						}
 				}
 				if(user.get("sex") == "male")
 				{
@@ -227,6 +240,8 @@ Parse.Cloud.job("tscoreZeroing", function(request, status) {
 Parse.Cloud.afterSave(Parse.User, function(request) {
 	Parse.Cloud.useMasterKey();  
 	//new vote is casted, update vote table
+	if (!request.object.existed())
+{
 	var Notif = Parse.Object.extend("Notification");
 	var Usr = Parse.Object.extend("User");
 	var notifObj = new Notif();
@@ -239,11 +254,11 @@ Parse.Cloud.afterSave(Parse.User, function(request) {
 			// Execute any logic that should take place after the object is saved.
 			console.log('New object created with objectId: ' + notifObj.id);
 			if (typeof(request.user) != "undefined" && request.user != null)
-			{
-				updusr.id = request.user.id;
-				updusr.set('notifPtr', notifObj);
-				updusr.save();
-			}
+	{
+		updusr.id = request.user.id;
+		updusr.set('notifPtr', notifObj);
+		updusr.save();
+	}
 		},
 		error: function(notifObj, error) {
 			// Execute any logic that should take place if the save fails.
@@ -251,6 +266,7 @@ Parse.Cloud.afterSave(Parse.User, function(request) {
 			console.log('Failed to create new object, with error code: ' + error.message);
 		}
 	});
+}
 
 });
 

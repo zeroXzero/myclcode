@@ -296,6 +296,7 @@ Parse.Cloud.afterSave(Parse.User, function(request) {
 });
 
 Parse.Cloud.define("votedAns", function(request, response) {
+	Parse.Cloud.useMasterKey();  
 	var query = new Parse.Query("Question");
 	query.include("answer1");
 	query.include("answer2");
@@ -311,10 +312,62 @@ Parse.Cloud.define("votedAns", function(request, response) {
 			var ans3Obj = result.get("answer3");
 			var ans4Obj = result.get("answer4");
 			var ans5Obj = result.get("answer5");
+			var Usr = Parse.Object.extend("User");
+			var user = new Usr();
+			user.id = request.params.userid;
 			
 			if (typeof(ans1Obj) != "undefined"){
-				console.log("Answer 1 defined,"+ans1Obj.getRelation('votes'));
+				console.log("Answer 1 defined,"+ans1Obj.relation('votes'));
+				var voteRelation = ans1Obj.relation('votes');
+				var vquery = voteRelation.query();
+				//vquery.include("user");
+				//vquery.equalTo("user",{
+				//	__type: "Pointer",
+				//	className: "_User",
+				//	objectId: "yrkGbsf2Kx" 
+				//	//objectId: request.params.userid 
+				//});
+				console.log("Answer 1 query defined,"+vquery);
+				vquery.find({
+					success: function(results) {
+						alert("Successfully retrieved " + results.length + " scores.");
+						console.log("User query1 success"+results);
+						ansno=1;
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query1 error"+error);
+					}
+				});
 			}
+			
+			if (typeof(ans2Obj) != "undefined"){
+				console.log("Answer 2 defined,"+ans2Obj.relation('votes'));
+				var voteRelation = ans2Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.include("user");
+				//vquery.equalTo("user",{
+				//	__type: "Pointer",
+				//	className: "_User",
+				//	//objectId: request.params.userid 
+				//	objectId: "yrkGbsf2Kx" 
+				//});
+				console.log("Answer 2 query defined,"+vquery);
+				vquery.find({
+					success: function(results) {
+						alert("Successfully retrieved " + results.length + " scores.");
+						console.log("User query2 success"+results);
+						ansno=2;
+
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query2 error"+error);
+					}
+				});
+			}
+
+
 			/*
 			if (typeof(ans1Obj) != "undefined"){
 				//console.log("Answer 1 defined,");

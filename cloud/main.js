@@ -498,7 +498,7 @@ Parse.Cloud.define("countQstn", function(request, response) {
 	});
 });
 
-//Returns the latest question based on range 
+//Returns the latest question 
 Parse.Cloud.define("latestFeed", function(request, response) {
 	Parse.Cloud.useMasterKey();  
 	var query = new Parse.Query("Question");
@@ -507,149 +507,51 @@ Parse.Cloud.define("latestFeed", function(request, response) {
 	query.include("answer3");
 	query.include("answer4");
 	query.include("answer5");
-	query.get(request.params.questionid, {
+	query.descending("createdAt");
+	query.limit(request.params.count);
+	query.skip(request.params.skipcnt);
+	var ansno = null;
+
+	query.find({
 		success: function(result) {
 			console.log("Inside success");
-			var ansno = null;
-			var ans1Obj = result.get("answer1");
-			var ans2Obj = result.get("answer2");
-			var ans3Obj = result.get("answer3");
-			var ans4Obj = result.get("answer4");
-			var ans5Obj = result.get("answer5");
-
-			if (typeof(ans1Obj) != "undefined"){
-				//console.log("Answer 1 relation, "+ans1Obj.relation('votes'));
-				var voteRelation = ans1Obj.relation('votes');
-				var vquery = voteRelation.query();
-				vquery.equalTo("user",{
-					__type: "Pointer",
-					className: "_User",
-					objectId: request.params.userid 
-				});
-				//console.log("Answer 1 query,"+vquery);
-				vquery.find({
-					success: function(results) {
-						//alert("Successfully retrieved " + results.length + " scores.");
-						//console.log("User query1 success"+results);
-						if (results.length >0)
-				{		
-					ansno=1;
-					response.success(ansno);
-				}
-					},
-					error: function(error) {
-						alert("Error");
-						console.log("User query1 error"+error);
-					}
-				});
+			for (var i = 0; i < result.length; i++) {
+				console.log("objid"+ i + result[i].id); 
 			}
+			response.success(result);
+		}
+		 ,
+		error: function() {
+			response.error("Question lookup failed");
+		}
+	});
+});
 
-			if (typeof(ans2Obj) != "undefined"){
-				//console.log("Answer 2 relation,"+ans2Obj.relation('votes'));
-				var voteRelation = ans2Obj.relation('votes');
-				var vquery = voteRelation.query();
-				vquery.equalTo("user",{
-					__type: "Pointer",
-					className: "_User",
-					objectId: request.params.userid 
-				});
-				//console.log("Answer 2 query,"+vquery);
-				vquery.find({
-					success: function(results) {
-						//alert("Successfully retrieved " + results.length + " scores.");
-						//console.log("User query2 success"+results);
-						if (results.length >0)
-				{		
-					ansno=2;
-					response.success(ansno);
-				}
+//Returns the trending question 
+Parse.Cloud.define("trendingFeed", function(request, response) {
+	Parse.Cloud.useMasterKey();  
+	var query = new Parse.Query("Question");
+	query.include("answer1");
+	query.include("answer2");
+	query.include("answer3");
+	query.include("answer4");
+	query.include("answer5");
+	query.descending("trendscore");
+	query.limit(request.params.count);
+	query.skip(request.params.skipcnt);
+	var ansno = null;
 
-					},
-					error: function(error) {
-						alert("Error");
-						console.log("User query2 error"+error);
-					}
-				});
+	query.find({
+		success: function(result) {
+			console.log("Inside success");
+			for (var i = 0; i < result.length; i++) {
+				console.log("objid"+ i + result[i].id); 
 			}
-
-			if (typeof(ans3Obj) != "undefined"){
-				var voteRelation = ans3Obj.relation('votes');
-				var vquery = voteRelation.query();
-				vquery.equalTo("user",{
-					__type: "Pointer",
-					className: "_User",
-					objectId: request.params.userid 
-				});
-				vquery.find({
-					success: function(results) {
-						//alert("Successfully retrieved " + results.length + " scores.");
-						if (results.length >0)
-				{		
-					ansno=3;
-					response.success(ansno);
-				}
-
-					},
-					error: function(error) {
-						alert("Error");
-						console.log("User query3 error"+error);
-					}
-				});
-			}
-
-			if (typeof(ans4Obj) != "undefined"){
-				var voteRelation = ans4Obj.relation('votes');
-				var vquery = voteRelation.query();
-				vquery.equalTo("user",{
-					__type: "Pointer",
-					className: "_User",
-					objectId: request.params.userid 
-				});
-				vquery.find({
-					success: function(results) {
-						//alert("Successfully retrieved " + results.length + " scores.");
-						if (results.length >0)
-				{		
-					ansno=4;
-					response.success(ansno);
-				}
-
-					},
-					error: function(error) {
-						alert("Error");
-						console.log("User query4 error"+error);
-					}
-				});
-			}
-
-			if (typeof(ans5Obj) != "undefined"){
-				var voteRelation = ans5Obj.relation('votes');
-				var vquery = voteRelation.query();
-				vquery.equalTo("user",{
-					__type: "Pointer",
-					className: "_User",
-					objectId: request.params.userid 
-				});
-				vquery.find({
-					success: function(results) {
-						//alert("Successfully retrieved " + results.length + " scores.");
-						if (results.length >0)
-				{		
-					ansno=5;
-					response.success(ansno);
-				}
-
-					},
-					error: function(error) {
-						alert("Error");
-						console.log("User query5 error"+error);
-					}
-				});
-			}
-
-		},
-			error: function() {
-				response.error("Question lookup failed");
-			}
+			response.success(result);
+		}
+		 ,
+		error: function() {
+			response.error("Question lookup failed");
+		}
 	});
 });

@@ -14,67 +14,67 @@ Parse.Cloud.afterSave("Question", function(request) {
 	//console.log("inside question aftersave,"+request.object.id);
 	Parse.Cloud.useMasterKey();
 	if (!request.object.existed())
+{
+	//console.log("Object didn't exist");
+	var Ques = Parse.Object.extend("Question");
+	var Usr = Parse.Object.extend("User");
+	var ans1Obj = request.object.get("answer1");
+	var ans2Obj = request.object.get("answer2");
+	var ans3Obj = request.object.get("answer3");
+	var ans4Obj = request.object.get("answer4");
+	var ans5Obj = request.object.get("answer5");
+	var qs = new Ques();
+	//var updusr = new Usr();
+	qs.id = request.object.id;
+	var user = Parse.User.current();
+
+	//console.log("user,"+user);
+	//console.log("user,"+user.id);
+
+	//Update user's question count (for notification)
+	if (typeof(user) != "undefined" && user != null)
 	{
-		//console.log("Object didn't exist");
-		var Ques = Parse.Object.extend("Question");
-		var Usr = Parse.Object.extend("User");
-		var ans1Obj = request.object.get("answer1");
-		var ans2Obj = request.object.get("answer2");
-		var ans3Obj = request.object.get("answer3");
-		var ans4Obj = request.object.get("answer4");
-		var ans5Obj = request.object.get("answer5");
-		var qs = new Ques();
-		//var updusr = new Usr();
-		qs.id = request.object.id;
-		var user = Parse.User.current();
 
-		//console.log("user,"+user);
-		//console.log("user,"+user.id);
-		
-		//Update user's question count (for notification)
-		if (typeof(user) != "undefined" && user != null)
-		{
-				
-						//console.log("Trying user fetch,"+Parse.User.current().get("notifPtr"));
-						var notifObj = Parse.User.current().get('notifPtr');
-						if (typeof(notifObj) != "undefined"){
-								notifObj.increment('qstnCnt');
-								notifObj.save();
-						}
-				
+		//console.log("Trying user fetch,"+Parse.User.current().get("notifPtr"));
+		var notifObj = Parse.User.current().get('notifPtr');
+		if (typeof(notifObj) != "undefined"){
+			notifObj.increment('qstnCnt');
+			notifObj.save();
 		}
 
-		if (typeof(ans1Obj) != "undefined"){
-			ans1Obj.fetch().then(function(ans) {
-				ans.set('ptrQuestion',  qs);
-				ans.save();
-			});
-		}
-		if (typeof(ans2Obj) != "undefined"){
-			ans2Obj.fetch().then(function(ans) {
-				ans.set('ptrQuestion',  qs);
-				ans.save();
-			});
-		}
-		if (typeof(ans3Obj) != "undefined"){
-			ans3Obj.fetch().then(function(ans) {
-				ans.set('ptrQuestion',  qs);
-				ans.save();
-			});
-		}
-		if (typeof(ans4Obj) != "undefined"){
-			ans4Obj.fetch().then(function(ans) {
-				ans.set('ptrQuestion',  qs);
-				ans.save();
-			});
-		}
-		if (typeof(ans5Obj) != "undefined"){
-			ans5Obj.fetch().then(function(ans) {
-				ans.set('ptrQuestion',  qs);
-				ans.save();
-			});
-		}
 	}
+
+	if (typeof(ans1Obj) != "undefined"){
+		ans1Obj.fetch().then(function(ans) {
+			ans.set('ptrQuestion',  qs);
+			ans.save();
+		});
+	}
+	if (typeof(ans2Obj) != "undefined"){
+		ans2Obj.fetch().then(function(ans) {
+			ans.set('ptrQuestion',  qs);
+			ans.save();
+		});
+	}
+	if (typeof(ans3Obj) != "undefined"){
+		ans3Obj.fetch().then(function(ans) {
+			ans.set('ptrQuestion',  qs);
+			ans.save();
+		});
+	}
+	if (typeof(ans4Obj) != "undefined"){
+		ans4Obj.fetch().then(function(ans) {
+			ans.set('ptrQuestion',  qs);
+			ans.save();
+		});
+	}
+	if (typeof(ans5Obj) != "undefined"){
+		ans5Obj.fetch().then(function(ans) {
+			ans.set('ptrQuestion',  qs);
+			ans.save();
+		});
+	}
+}
 
 });
 
@@ -86,9 +86,9 @@ Parse.Cloud.beforeSave("Question", function(request, response) {
 	Parse.Cloud.useMasterKey();
 	//Only do this in first save
 	if (request.object.isNew())
-	{
-		//console.log("IsNew check passed");
-	
+{
+	//console.log("IsNew check passed");
+
 	var toLowerCase = function(w) { return w.toLowerCase(); };
 
 	var words = post.get("data").split(/\b/);
@@ -96,15 +96,15 @@ Parse.Cloud.beforeSave("Question", function(request, response) {
 	var stopWords = ["the", "in", "and", "why", "how", "what", "when", "or", "where", "is", "was", "were", "are"]
 	words = _.filter(words, function(w) { return w.match(/^\w+$/) && ! _.contains(stopWords, w); });
 
-	var hashtags = post.get("data").match(/#.+?\b/g);
-	hashtags = _.map(hashtags, toLowerCase);
+var hashtags = post.get("data").match(/#.+?\b/g);
+hashtags = _.map(hashtags, toLowerCase);
 
-	post.set("words", words);
-	post.set("tags", hashtags);
-	}
+post.set("words", words);
+post.set("tags", hashtags);
+}
 
 
-	response.success();
+response.success();
 });
 
 Parse.Cloud.beforeSave("Answer", function(request, response) {
@@ -125,23 +125,23 @@ Parse.Cloud.beforeSave("Answer", function(request, response) {
 	//This query not functional yet. Requried for checking previous count
 	//So that increment will not be greater than 1
 	/*
-	if (!request.object.isNew()) {
-		//var query = new Parse.Query("Answer");
-		var query = new Parse.Query(Parse.User);
-		query.get(request.object.id, { // Gets row you're trying to update
-			success: function(row) {
-				console.log("Inside success");
-				if (row.get('count') !== null)
-					alert("Query count,"+row.get("count"));
+	   if (!request.object.isNew()) {
+	//var query = new Parse.Query("Answer");
+	var query = new Parse.Query(Parse.User);
+	query.get(request.object.id, { // Gets row you're trying to update
+	success: function(row) {
+	console.log("Inside success");
+	if (row.get('count') !== null)
+	alert("Query count,"+row.get("count"));
 
-					//response.error('Not allowed to change your choice once submitted');
-				//response.success(); // Only after we check for error do we call success
-			},
-			error: function(row, error) {
-				alert("Query count not found");
-				//response.error(error.message);
-			}
-		});
+	//response.error('Not allowed to change your choice once submitted');
+	//response.success(); // Only after we check for error do we call success
+	},
+	error: function(row, error) {
+	alert("Query count not found");
+	//response.error(error.message);
+	}
+	});
 	}*/
 
 	//This check makes sure that some change has happened to count
@@ -160,12 +160,12 @@ Parse.Cloud.beforeSave("Answer", function(request, response) {
 					   updusr.increment('ansCnt');
 					   updusr.save();
 					   */
-						//console.log("Trying user fetch,"+Parse.User.current().get("notifPtr"));
-						var notifObj = Parse.User.current().get('notifPtr');
-						if (typeof(notifObj) != "undefined"){
-								notifObj.increment('ansCnt');
-								notifObj.save();
-						}
+					//console.log("Trying user fetch,"+Parse.User.current().get("notifPtr"));
+					var notifObj = Parse.User.current().get('notifPtr');
+					if (typeof(notifObj) != "undefined"){
+						notifObj.increment('ansCnt');
+						notifObj.save();
+					}
 				}
 				if(user.get("sex") == "male")
 				{
@@ -233,13 +233,13 @@ Parse.Cloud.afterSave("Vote", function(request) {
 
 	//Update user's question count (for notification)
 	if (typeof(ansObj)!="undefined" &&  ansObj != null)
-	{
-		var voteRelation = ansObj.relation("votes");
-		voteRelation.add(request.object);
-		ansObj.save();
-		console.log('Added vote relation');
-		
-	}
+{
+	var voteRelation = ansObj.relation("votes");
+	voteRelation.add(request.object);
+	ansObj.save();
+	console.log('Added vote relation');
+
+}
 
 });
 
@@ -295,6 +295,8 @@ Parse.Cloud.afterSave(Parse.User, function(request) {
 
 });
 
+//Returns voted answer number if questionid and userid is provided
+//input params questionid, userid
 Parse.Cloud.define("votedAns", function(request, response) {
 	Parse.Cloud.useMasterKey();  
 	var query = new Parse.Query("Question");
@@ -303,7 +305,7 @@ Parse.Cloud.define("votedAns", function(request, response) {
 	query.include("answer3");
 	query.include("answer4");
 	query.include("answer5");
-	query.get(request.params.question, {
+	query.get(request.params.questionid, {
 		success: function(result) {
 			console.log("Inside success");
 			var ansno = null;
@@ -312,7 +314,7 @@ Parse.Cloud.define("votedAns", function(request, response) {
 			var ans3Obj = result.get("answer3");
 			var ans4Obj = result.get("answer4");
 			var ans5Obj = result.get("answer5");
-			
+
 			if (typeof(ans1Obj) != "undefined"){
 				//console.log("Answer 1 relation, "+ans1Obj.relation('votes'));
 				var voteRelation = ans1Obj.relation('votes');
@@ -328,10 +330,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						//console.log("User query1 success"+results);
 						if (results.length >0)
-						{		
-						ansno=1;
-						response.success(ansno);
-						}
+				{		
+					ansno=1;
+					response.success(ansno);
+				}
 					},
 					error: function(error) {
 						alert("Error");
@@ -339,7 +341,7 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					}
 				});
 			}
-			
+
 			if (typeof(ans2Obj) != "undefined"){
 				//console.log("Answer 2 relation,"+ans2Obj.relation('votes'));
 				var voteRelation = ans2Obj.relation('votes');
@@ -355,10 +357,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						//console.log("User query2 success"+results);
 						if (results.length >0)
-						{		
-						ansno=2;
-						response.success(ansno);
-						}
+				{		
+					ansno=2;
+					response.success(ansno);
+				}
 
 					},
 					error: function(error) {
@@ -380,10 +382,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					success: function(results) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						if (results.length >0)
-						{		
-						ansno=3;
-						response.success(ansno);
-						}
+				{		
+					ansno=3;
+					response.success(ansno);
+				}
 
 					},
 					error: function(error) {
@@ -405,10 +407,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					success: function(results) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						if (results.length >0)
-						{		
-						ansno=4;
-						response.success(ansno);
-						}
+				{		
+					ansno=4;
+					response.success(ansno);
+				}
 
 					},
 					error: function(error) {
@@ -417,7 +419,7 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					}
 				});
 			}
-			
+
 			if (typeof(ans5Obj) != "undefined"){
 				var voteRelation = ans5Obj.relation('votes');
 				var vquery = voteRelation.query();
@@ -430,10 +432,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					success: function(results) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						if (results.length >0)
-						{		
-						ansno=5;
-						response.success(ansno);
-						}
+				{		
+					ansno=5;
+					response.success(ansno);
+				}
 
 					},
 					error: function(error) {
@@ -444,40 +446,210 @@ Parse.Cloud.define("votedAns", function(request, response) {
 			}
 
 			/*
-			if (typeof(ans1Obj) != "undefined"){
-				//console.log("Answer 1 defined,");
-				if(ans1Obj.get('voters'))
-					if (ans1Obj.get('voters').indexOf(request.params.userid) != -1)
-						ansno = 1;
-			}
-			if (typeof(ans2Obj) != "undefined"){
-				//console.log("Answer 2 defined");
-				if(ans2Obj.get('voters'))
-					if (ans2Obj.get('voters').indexOf(request.params.userid) != -1)
-						ansno = 2;
-			}
-			if (typeof(ans3Obj) != "undefined"){
-				//console.log("Answer 3 defined");
-				if(ans3Obj.get('voters'))
-					if (ans3Obj.get('voters').indexOf(request.params.userid) != -1)
-						ansno = 3;
-			}
-			if (typeof(ans4Obj) != "undefined"){
-				//console.log("Answer 4 defined");
-				if(ans4Obj.get('voters'))
-					if (ans4Obj.get('voters').indexOf(request.params.userid) != -1)
-						ansno = 4;
-			}
-			if (typeof(ans5Obj) != "undefined"){
-				//console.log("Answer 4 defined");
-				if(ans5Obj.get('voters'))
-					if (ans5Obj.get('voters').indexOf(request.params.userid) != -1)
-						ansno = 5;
-			}*/
+			   if (typeof(ans1Obj) != "undefined"){
+//console.log("Answer 1 defined,");
+if(ans1Obj.get('voters'))
+if (ans1Obj.get('voters').indexOf(request.params.userid) != -1)
+ansno = 1;
+}
+if (typeof(ans2Obj) != "undefined"){
+//console.log("Answer 2 defined");
+if(ans2Obj.get('voters'))
+if (ans2Obj.get('voters').indexOf(request.params.userid) != -1)
+ansno = 2;
+}
+if (typeof(ans3Obj) != "undefined"){
+//console.log("Answer 3 defined");
+if(ans3Obj.get('voters'))
+if (ans3Obj.get('voters').indexOf(request.params.userid) != -1)
+ansno = 3;
+}
+if (typeof(ans4Obj) != "undefined"){
+//console.log("Answer 4 defined");
+if(ans4Obj.get('voters'))
+if (ans4Obj.get('voters').indexOf(request.params.userid) != -1)
+ansno = 4;
+}
+if (typeof(ans5Obj) != "undefined"){
+//console.log("Answer 4 defined");
+if(ans5Obj.get('voters'))
+if (ans5Obj.get('voters').indexOf(request.params.userid) != -1)
+ansno = 5;
+}*/
+},
+	error: function() {
+		response.error("Question lookup failed");
+	}
+});
+});
+
+//Returns total question count
+Parse.Cloud.define("countQstn", function(request, response) {
+	var query = new Parse.Query("Question");
+	query.count({
+		success: function(count) {
+			//alert("Total Question count" + count);
+			response.success(count);
 		},
-		error: function() {
-			response.error("Question lookup failed");
+		error: function(error) {
+			alert("Error");
+			response.error("Count lookup failed");
 		}
 	});
 });
 
+//Returns the latest question based on range 
+Parse.Cloud.define("latestFeed", function(request, response) {
+	Parse.Cloud.useMasterKey();  
+	var query = new Parse.Query("Question");
+	query.include("answer1");
+	query.include("answer2");
+	query.include("answer3");
+	query.include("answer4");
+	query.include("answer5");
+	query.get(request.params.questionid, {
+		success: function(result) {
+			console.log("Inside success");
+			var ansno = null;
+			var ans1Obj = result.get("answer1");
+			var ans2Obj = result.get("answer2");
+			var ans3Obj = result.get("answer3");
+			var ans4Obj = result.get("answer4");
+			var ans5Obj = result.get("answer5");
+
+			if (typeof(ans1Obj) != "undefined"){
+				//console.log("Answer 1 relation, "+ans1Obj.relation('votes'));
+				var voteRelation = ans1Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				//console.log("Answer 1 query,"+vquery);
+				vquery.find({
+					success: function(results) {
+						//alert("Successfully retrieved " + results.length + " scores.");
+						//console.log("User query1 success"+results);
+						if (results.length >0)
+				{		
+					ansno=1;
+					response.success(ansno);
+				}
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query1 error"+error);
+					}
+				});
+			}
+
+			if (typeof(ans2Obj) != "undefined"){
+				//console.log("Answer 2 relation,"+ans2Obj.relation('votes'));
+				var voteRelation = ans2Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				//console.log("Answer 2 query,"+vquery);
+				vquery.find({
+					success: function(results) {
+						//alert("Successfully retrieved " + results.length + " scores.");
+						//console.log("User query2 success"+results);
+						if (results.length >0)
+				{		
+					ansno=2;
+					response.success(ansno);
+				}
+
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query2 error"+error);
+					}
+				});
+			}
+
+			if (typeof(ans3Obj) != "undefined"){
+				var voteRelation = ans3Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				vquery.find({
+					success: function(results) {
+						//alert("Successfully retrieved " + results.length + " scores.");
+						if (results.length >0)
+				{		
+					ansno=3;
+					response.success(ansno);
+				}
+
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query3 error"+error);
+					}
+				});
+			}
+
+			if (typeof(ans4Obj) != "undefined"){
+				var voteRelation = ans4Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				vquery.find({
+					success: function(results) {
+						//alert("Successfully retrieved " + results.length + " scores.");
+						if (results.length >0)
+				{		
+					ansno=4;
+					response.success(ansno);
+				}
+
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query4 error"+error);
+					}
+				});
+			}
+
+			if (typeof(ans5Obj) != "undefined"){
+				var voteRelation = ans5Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				vquery.find({
+					success: function(results) {
+						//alert("Successfully retrieved " + results.length + " scores.");
+						if (results.length >0)
+				{		
+					ansno=5;
+					response.success(ansno);
+				}
+
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query5 error"+error);
+					}
+				});
+			}
+
+		},
+			error: function() {
+				response.error("Question lookup failed");
+			}
+	});
+});

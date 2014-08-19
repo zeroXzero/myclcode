@@ -510,14 +510,13 @@ Parse.Cloud.define("latestFeed", function(request, response) {
 	query.descending("createdAt");
 	query.limit(request.params.count);
 	query.skip(request.params.skipcnt);
-	var ansno = null;
 
 	query.find({
 		success: function(result) {
 			console.log("Inside success");
-			for (var i = 0; i < result.length; i++) {
-				console.log("objid"+ i + result[i].id); 
-			}
+			//for (var i = 0; i < result.length; i++) {
+			//	console.log("objid"+ i + result[i].id); 
+			//}
 			response.success(result);
 		}
 		 ,
@@ -539,14 +538,47 @@ Parse.Cloud.define("trendingFeed", function(request, response) {
 	query.descending("trendscore");
 	query.limit(request.params.count);
 	query.skip(request.params.skipcnt);
-	var ansno = null;
 
 	query.find({
 		success: function(result) {
 			console.log("Inside success");
-			for (var i = 0; i < result.length; i++) {
-				console.log("objid"+ i + result[i].id); 
-			}
+			//for (var i = 0; i < result.length; i++) {
+			//	console.log("objid"+ i + result[i].id); 
+			//}
+			response.success(result);
+		}
+		 ,
+		error: function() {
+			response.error("Question lookup failed");
+		}
+	});
+});
+
+//Returns latest questions for an userid 
+Parse.Cloud.define("userlatestFeed", function(request, response) {
+	Parse.Cloud.useMasterKey();  
+	var query = new Parse.Query("Question");
+	query.include("answer1");
+	query.include("answer2");
+	query.include("answer3");
+	query.include("answer4");
+	query.include("answer5");
+	query.include("user");
+	//query.descending("createdAt");
+	query.equalTo("user",{
+		__type: "Pointer",
+		className: "_User",
+		objectId: request.params.userid 
+	});
+	query.limit(request.params.count);
+	query.skip(request.params.skipcnt);
+
+	query.find({
+		success: function(result) {
+			console.log("Inside success");
+			//for (var i = 0; i < result.length; i++) {
+			//	console.log("objid"+ i + result[i].id); 
+			//}
 			response.success(result);
 		}
 		 ,

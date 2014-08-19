@@ -19,10 +19,18 @@
 #         -d '{"count":1, "skipcnt":1}' \
 #         https://api.parse.com/1/functions/latestFeed
 
+#echo 
+#curl -X POST \
+#         -H "X-Parse-Application-Id: KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke" \
+#         -H "X-Parse-REST-API-Key: ZrVOBoTdCdoa9EjT3DvcDLJn1V7ImbhMnPWgssjH" \
+#         -H "Content-Type: application/json" \
+#         -d '{"count":2, "skipcnt":2}' \
+#         https://api.parse.com/1/functions/trendingFeed
+
 echo 
 curl -X POST \
          -H "X-Parse-Application-Id: KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke" \
          -H "X-Parse-REST-API-Key: ZrVOBoTdCdoa9EjT3DvcDLJn1V7ImbhMnPWgssjH" \
          -H "Content-Type: application/json" \
-         -d '{"count":1, "skipcnt":2}' \
-         https://api.parse.com/1/functions/trendingFeed
+         -d '{"count":2, "skipcnt":0, "userid":"P05Jzgt4qQ"}' \
+         https://api.parse.com/1/functions/userlatestFeed

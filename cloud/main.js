@@ -14,67 +14,67 @@ Parse.Cloud.afterSave("Question", function(request) {
 	//console.log("inside question aftersave,"+request.object.id);
 	Parse.Cloud.useMasterKey();
 	if (!request.object.existed())
-{
-	//console.log("Object didn't exist");
-	var Ques = Parse.Object.extend("Question");
-	var Usr = Parse.Object.extend("User");
-	var ans1Obj = request.object.get("answer1");
-	var ans2Obj = request.object.get("answer2");
-	var ans3Obj = request.object.get("answer3");
-	var ans4Obj = request.object.get("answer4");
-	var ans5Obj = request.object.get("answer5");
-	var qs = new Ques();
-	//var updusr = new Usr();
-	qs.id = request.object.id;
-	var user = Parse.User.current();
-
-	//console.log("user,"+user);
-	//console.log("user,"+user.id);
-
-	//Update user's question count (for notification)
-	if (typeof(user) != "undefined" && user != null)
 	{
+		//console.log("Object didn't exist");
+		var Ques = Parse.Object.extend("Question");
+		var Usr = Parse.Object.extend("User");
+		var ans1Obj = request.object.get("answer1");
+		var ans2Obj = request.object.get("answer2");
+		var ans3Obj = request.object.get("answer3");
+		var ans4Obj = request.object.get("answer4");
+		var ans5Obj = request.object.get("answer5");
+		var qs = new Ques();
+		//var updusr = new Usr();
+		qs.id = request.object.id;
+		var user = Parse.User.current();
 
-		//console.log("Trying user fetch,"+Parse.User.current().get("notifPtr"));
-		var notifObj = Parse.User.current().get('notifPtr');
-		if (typeof(notifObj) != "undefined"){
-			notifObj.increment('qstnCnt');
-			notifObj.save();
+		//console.log("user,"+user);
+		//console.log("user,"+user.id);
+
+		//Update user's question count (for notification)
+		if (typeof(user) != "undefined" && user != null)
+		{
+
+			//console.log("Trying user fetch,"+Parse.User.current().get("notifPtr"));
+			var notifObj = Parse.User.current().get('notifPtr');
+			if (typeof(notifObj) != "undefined"){
+				notifObj.increment('qstnCnt');
+				notifObj.save();
+			}
+
 		}
 
+		if (typeof(ans1Obj) != "undefined"){
+			ans1Obj.fetch().then(function(ans) {
+				ans.set('ptrQuestion',  qs);
+				ans.save();
+			});
+		}
+		if (typeof(ans2Obj) != "undefined"){
+			ans2Obj.fetch().then(function(ans) {
+				ans.set('ptrQuestion',  qs);
+				ans.save();
+			});
+		}
+		if (typeof(ans3Obj) != "undefined"){
+			ans3Obj.fetch().then(function(ans) {
+				ans.set('ptrQuestion',  qs);
+				ans.save();
+			});
+		}
+		if (typeof(ans4Obj) != "undefined"){
+			ans4Obj.fetch().then(function(ans) {
+				ans.set('ptrQuestion',  qs);
+				ans.save();
+			});
+		}
+		if (typeof(ans5Obj) != "undefined"){
+			ans5Obj.fetch().then(function(ans) {
+				ans.set('ptrQuestion',  qs);
+				ans.save();
+			});
+		}
 	}
-
-	if (typeof(ans1Obj) != "undefined"){
-		ans1Obj.fetch().then(function(ans) {
-			ans.set('ptrQuestion',  qs);
-			ans.save();
-		});
-	}
-	if (typeof(ans2Obj) != "undefined"){
-		ans2Obj.fetch().then(function(ans) {
-			ans.set('ptrQuestion',  qs);
-			ans.save();
-		});
-	}
-	if (typeof(ans3Obj) != "undefined"){
-		ans3Obj.fetch().then(function(ans) {
-			ans.set('ptrQuestion',  qs);
-			ans.save();
-		});
-	}
-	if (typeof(ans4Obj) != "undefined"){
-		ans4Obj.fetch().then(function(ans) {
-			ans.set('ptrQuestion',  qs);
-			ans.save();
-		});
-	}
-	if (typeof(ans5Obj) != "undefined"){
-		ans5Obj.fetch().then(function(ans) {
-			ans.set('ptrQuestion',  qs);
-			ans.save();
-		});
-	}
-}
 
 });
 
@@ -86,25 +86,25 @@ Parse.Cloud.beforeSave("Question", function(request, response) {
 	Parse.Cloud.useMasterKey();
 	//Only do this in first save
 	if (request.object.isNew())
-{
-	//console.log("IsNew check passed");
+	{
+		//console.log("IsNew check passed");
 
-	var toLowerCase = function(w) { return w.toLowerCase(); };
+		var toLowerCase = function(w) { return w.toLowerCase(); };
 
-	var words = post.get("data").split(/\b/);
-	words = _.map(words, toLowerCase);
-	var stopWords = ["the", "in", "and", "why", "how", "what", "when", "or", "where", "is", "was", "were", "are"]
-	words = _.filter(words, function(w) { return w.match(/^\w+$/) && ! _.contains(stopWords, w); });
+		var words = post.get("data").split(/\b/);
+		words = _.map(words, toLowerCase);
+		var stopWords = ["the", "in", "and", "why", "how", "what", "when", "or", "where", "is", "was", "were", "are"]
+			words = _.filter(words, function(w) { return w.match(/^\w+$/) && ! _.contains(stopWords, w); });
 
-var hashtags = post.get("data").match(/#.+?\b/g);
-hashtags = _.map(hashtags, toLowerCase);
+		var hashtags = post.get("data").match(/#.+?\b/g);
+		hashtags = _.map(hashtags, toLowerCase);
 
-post.set("words", words);
-post.set("tags", hashtags);
-}
+		post.set("words", words);
+		post.set("tags", hashtags);
+	}
 
 
-response.success();
+	response.success();
 });
 
 Parse.Cloud.beforeSave("Answer", function(request, response) {
@@ -233,13 +233,13 @@ Parse.Cloud.afterSave("Vote", function(request) {
 
 	//Update user's question count (for notification)
 	if (typeof(ansObj)!="undefined" &&  ansObj != null)
-{
-	var voteRelation = ansObj.relation("votes");
-	voteRelation.add(request.object);
-	ansObj.save();
-	console.log('Added vote relation');
+	{
+		var voteRelation = ansObj.relation("votes");
+		voteRelation.add(request.object);
+		ansObj.save();
+		console.log('Added vote relation');
 
-}
+	}
 
 });
 
@@ -266,32 +266,32 @@ Parse.Cloud.afterSave(Parse.User, function(request) {
 	Parse.Cloud.useMasterKey();  
 	//new vote is casted, update vote table
 	if (!request.object.existed())
-{
-	var Notif = Parse.Object.extend("Notification");
-	var Usr = Parse.Object.extend("User");
-	var notifObj = new Notif();
-	var updusr = new Usr();
-
-	notifObj.set("userid", request.user.id);
-
-	notifObj.save(null, {
-		success: function(notifObj) {
-			// Execute any logic that should take place after the object is saved.
-			console.log('New object created with objectId: ' + notifObj.id);
-			if (typeof(request.user) != "undefined" && request.user != null)
 	{
-		updusr.id = request.user.id;
-		updusr.set('notifPtr', notifObj);
-		updusr.save();
+		var Notif = Parse.Object.extend("Notification");
+		var Usr = Parse.Object.extend("User");
+		var notifObj = new Notif();
+		var updusr = new Usr();
+
+		notifObj.set("userid", request.user.id);
+
+		notifObj.save(null, {
+			success: function(notifObj) {
+				// Execute any logic that should take place after the object is saved.
+				console.log('New object created with objectId: ' + notifObj.id);
+				if (typeof(request.user) != "undefined" && request.user != null)
+				{
+					updusr.id = request.user.id;
+					updusr.set('notifPtr', notifObj);
+					updusr.save();
+				}
+			},
+			error: function(notifObj, error) {
+				// Execute any logic that should take place if the save fails.
+				// error is a Parse.Error with an error code and description.
+				console.log('Failed to create new object, with error code: ' + error.message);
+			}
+		});
 	}
-		},
-		error: function(notifObj, error) {
-			// Execute any logic that should take place if the save fails.
-			// error is a Parse.Error with an error code and description.
-			console.log('Failed to create new object, with error code: ' + error.message);
-		}
-	});
-}
 
 });
 
@@ -330,10 +330,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						//console.log("User query1 success"+results);
 						if (results.length >0)
-				{		
-					ansno=1;
-					response.success(ansno);
-				}
+						{		
+							ansno=1;
+							response.success(ansno);
+						}
 					},
 					error: function(error) {
 						alert("Error");
@@ -357,10 +357,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						//console.log("User query2 success"+results);
 						if (results.length >0)
-				{		
-					ansno=2;
-					response.success(ansno);
-				}
+						{		
+							ansno=2;
+							response.success(ansno);
+						}
 
 					},
 					error: function(error) {
@@ -382,10 +382,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					success: function(results) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						if (results.length >0)
-				{		
-					ansno=3;
-					response.success(ansno);
-				}
+						{		
+							ansno=3;
+							response.success(ansno);
+						}
 
 					},
 					error: function(error) {
@@ -407,10 +407,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					success: function(results) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						if (results.length >0)
-				{		
-					ansno=4;
-					response.success(ansno);
-				}
+						{		
+							ansno=4;
+							response.success(ansno);
+						}
 
 					},
 					error: function(error) {
@@ -432,10 +432,10 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					success: function(results) {
 						//alert("Successfully retrieved " + results.length + " scores.");
 						if (results.length >0)
-				{		
-					ansno=5;
-					response.success(ansno);
-				}
+						{		
+							ansno=5;
+							response.success(ansno);
+						}
 
 					},
 					error: function(error) {
@@ -519,10 +519,10 @@ Parse.Cloud.define("latestFeed", function(request, response) {
 			//}
 			response.success(result);
 		}
-		 ,
-		error: function() {
-			response.error("Question lookup failed");
-		}
+				 ,
+				 error: function() {
+					 response.error("Question lookup failed");
+				 }
 	});
 });
 
@@ -547,10 +547,10 @@ Parse.Cloud.define("trendingFeed", function(request, response) {
 			//}
 			response.success(result);
 		}
-		 ,
-		error: function() {
-			response.error("Question lookup failed");
-		}
+				 ,
+				 error: function() {
+					 response.error("Question lookup failed");
+				 }
 	});
 });
 
@@ -581,9 +581,46 @@ Parse.Cloud.define("userlatestFeed", function(request, response) {
 			//}
 			response.success(result);
 		}
-		 ,
-		error: function() {
-			response.error("Question lookup failed");
+				 ,
+				 error: function() {
+					 response.error("Question lookup failed");
+				 }
+	});
+});
+
+//Returns latest answers for an userid 
+Parse.Cloud.define("userAnswered", function(request, response) {
+	Parse.Cloud.useMasterKey();  
+	var query = new Parse.Query("Vote");
+	query.include("ans");
+	query.include("user");
+	//query.descending("createdAt");
+	query.equalTo("user",{
+		__type: "Pointer",
+		className: "_User",
+		objectId: request.params.userid 
+	});
+	query.limit(request.params.count);
+	query.skip(request.params.skipcnt);
+
+	query.find({
+		success: function(result) {
+			console.log("Inside success");
+			var retarr = new Array(result.length);
+			for (var i = 0; i < result.length; i++) {
+				//result[i].get('ans').get('ptrQuestion').fetch().then(function(qs) {
+				//	retarr[i]=qs;
+				//	if(i == result.length)
+				//		response.success(retarr);
+				//});
+				retarr[i]=result[i].get('ans');
+				if(i == (result.length-1))
+					response.success(retarr);
+			}
 		}
+				 ,
+				 error: function() {
+					 response.error("Question lookup failed");
+				 }
 	});
 });

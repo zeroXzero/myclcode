@@ -312,27 +312,26 @@ Parse.Cloud.define("votedAns", function(request, response) {
 			var ans3Obj = result.get("answer3");
 			var ans4Obj = result.get("answer4");
 			var ans5Obj = result.get("answer5");
-			var Usr = Parse.Object.extend("User");
-			var user = new Usr();
-			user.id = request.params.userid;
 			
 			if (typeof(ans1Obj) != "undefined"){
-				console.log("Answer 1 defined,"+ans1Obj.relation('votes'));
+				//console.log("Answer 1 relation, "+ans1Obj.relation('votes'));
 				var voteRelation = ans1Obj.relation('votes');
 				var vquery = voteRelation.query();
-				//vquery.include("user");
-				//vquery.equalTo("user",{
-				//	__type: "Pointer",
-				//	className: "_User",
-				//	objectId: "yrkGbsf2Kx" 
-				//	//objectId: request.params.userid 
-				//});
-				console.log("Answer 1 query defined,"+vquery);
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				//console.log("Answer 1 query,"+vquery);
 				vquery.find({
 					success: function(results) {
-						alert("Successfully retrieved " + results.length + " scores.");
-						console.log("User query1 success"+results);
+						//alert("Successfully retrieved " + results.length + " scores.");
+						//console.log("User query1 success"+results);
+						if (results.length >0)
+						{		
 						ansno=1;
+						response.success(ansno);
+						}
 					},
 					error: function(error) {
 						alert("Error");
@@ -342,22 +341,24 @@ Parse.Cloud.define("votedAns", function(request, response) {
 			}
 			
 			if (typeof(ans2Obj) != "undefined"){
-				console.log("Answer 2 defined,"+ans2Obj.relation('votes'));
+				//console.log("Answer 2 relation,"+ans2Obj.relation('votes'));
 				var voteRelation = ans2Obj.relation('votes');
 				var vquery = voteRelation.query();
-				vquery.include("user");
-				//vquery.equalTo("user",{
-				//	__type: "Pointer",
-				//	className: "_User",
-				//	//objectId: request.params.userid 
-				//	objectId: "yrkGbsf2Kx" 
-				//});
-				console.log("Answer 2 query defined,"+vquery);
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				//console.log("Answer 2 query,"+vquery);
 				vquery.find({
 					success: function(results) {
-						alert("Successfully retrieved " + results.length + " scores.");
-						console.log("User query2 success"+results);
+						//alert("Successfully retrieved " + results.length + " scores.");
+						//console.log("User query2 success"+results);
+						if (results.length >0)
+						{		
 						ansno=2;
+						response.success(ansno);
+						}
 
 					},
 					error: function(error) {
@@ -367,6 +368,80 @@ Parse.Cloud.define("votedAns", function(request, response) {
 				});
 			}
 
+			if (typeof(ans3Obj) != "undefined"){
+				var voteRelation = ans3Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				vquery.find({
+					success: function(results) {
+						//alert("Successfully retrieved " + results.length + " scores.");
+						if (results.length >0)
+						{		
+						ansno=3;
+						response.success(ansno);
+						}
+
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query3 error"+error);
+					}
+				});
+			}
+
+			if (typeof(ans4Obj) != "undefined"){
+				var voteRelation = ans4Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				vquery.find({
+					success: function(results) {
+						//alert("Successfully retrieved " + results.length + " scores.");
+						if (results.length >0)
+						{		
+						ansno=4;
+						response.success(ansno);
+						}
+
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query4 error"+error);
+					}
+				});
+			}
+			
+			if (typeof(ans5Obj) != "undefined"){
+				var voteRelation = ans5Obj.relation('votes');
+				var vquery = voteRelation.query();
+				vquery.equalTo("user",{
+					__type: "Pointer",
+					className: "_User",
+					objectId: request.params.userid 
+				});
+				vquery.find({
+					success: function(results) {
+						//alert("Successfully retrieved " + results.length + " scores.");
+						if (results.length >0)
+						{		
+						ansno=5;
+						response.success(ansno);
+						}
+
+					},
+					error: function(error) {
+						alert("Error");
+						console.log("User query5 error"+error);
+					}
+				});
+			}
 
 			/*
 			if (typeof(ans1Obj) != "undefined"){
@@ -399,7 +474,6 @@ Parse.Cloud.define("votedAns", function(request, response) {
 					if (ans5Obj.get('voters').indexOf(request.params.userid) != -1)
 						ansno = 5;
 			}*/
-			response.success(ansno);
 		},
 		error: function() {
 			response.error("Question lookup failed");

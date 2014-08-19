@@ -1,0 +1,28 @@
+#curl -X POST \
+#         -H "X-Parse-Application-Id: KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke" \
+#         -H "X-Parse-REST-API-Key: ZrVOBoTdCdoa9EjT3DvcDLJn1V7ImbhMnPWgssjH" \
+#         -H "Content-Type: application/json" \
+#         -d '{"questionid":"suxkrG66TM", "userid":"yrkGbsf2Kx"}' \
+#         https://api.parse.com/1/functions/votedAns
+#echo 
+#curl -X POST \
+#         -H "X-Parse-Application-Id: KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke" \
+#         -H "X-Parse-REST-API-Key: ZrVOBoTdCdoa9EjT3DvcDLJn1V7ImbhMnPWgssjH" \
+#         -H "Content-Type: application/json" \
+#         -d '{}' \
+#         https://api.parse.com/1/functions/countQstn
+#echo 
+#curl -X POST \
+#         -H "X-Parse-Application-Id: KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke" \
+#         -H "X-Parse-REST-API-Key: ZrVOBoTdCdoa9EjT3DvcDLJn1V7ImbhMnPWgssjH" \
+#         -H "Content-Type: application/json" \
+#         -d '{"count":1, "skipcnt":1}' \
+#         https://api.parse.com/1/functions/latestFeed
+
+echo 
+curl -X POST \
+         -H "X-Parse-Application-Id: KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke" \
+         -H "X-Parse-REST-API-Key: ZrVOBoTdCdoa9EjT3DvcDLJn1V7ImbhMnPWgssjH" \
+         -H "Content-Type: application/json" \
+         -d '{"count":1, "skipcnt":2}' \
+         https://api.parse.com/1/functions/trendingFeed

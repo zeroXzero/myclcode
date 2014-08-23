@@ -655,11 +655,14 @@ Parse.Cloud.define("queryFeed", function(request, response) {
             promise = promise.then(function() {
                 return voteQuery.find();
             }).then(function(votes){
-                var qJson = result.toJson();
+                var qJson = result.toJSON();
                 if(votes.length > 0){
                     var userVote = votes[0];
                     qJson.votedByMe = true;
                     qJson.myAnswer = userVote.get('ans').id;
+                }else{
+                    qJson.votedByMe = false;
+                    qJson.myAnswer = null;
                 }
                 resultJson.push(qJson);
             });

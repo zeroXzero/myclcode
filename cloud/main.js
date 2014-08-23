@@ -5,10 +5,6 @@
 //  response.success("Hello world!");
 //});
 
-//Parse.Cloud.beforeSave("Question", function(request, response) {
-//	console.log("inside question b4save,"+request.object.id);
-//	response.success();
-//});
 
 Parse.Cloud.afterSave("Question", function(request) {
 	//console.log("inside question aftersave,"+request.object.id);
@@ -623,4 +619,93 @@ Parse.Cloud.define("userAnswered", function(request, response) {
 					 response.error("Question lookup failed");
 				 }
 	});
+});
+
+Parse.Cloud.define("queryFeed", function(request, response) {
+    Parse.Cloud.useMasterKey();
+    var query = new Parse.Query("Question");
+    query.include("answer1");
+    query.include("answer2");
+    query.include("answer3");
+    query.include("answer4");
+    query.include("answer5");
+    query.include("user");
+    query.descending("updatedAt");
+
+    query.limit(request.params.limit);
+    query.skip(request.params.skip);
+
+    var resultJson = [];
+
+    query.find().then(function(results){
+
+        var promise = Parse.Promise.as();
+        _.each(results, function(result) {
+            var relation = result.relation("votes");
+            var voteQuery = relation.query();
+            voteQuery.include("user");
+            voteQuery.include("ans");
+            voteQuery.limit(1);
+            voteQuery.equalTo("user",{
+                __type: "Pointer",
+                className: "_User",
+                objectId: request.params.userId
+            });
+
+            promise = promise.then(function() {
+                return voteQuery.find();
+            }).then(function(votes){
+                var qJson = result.toJson();
+                if(votes.length > 0){
+                    var userVote = votes[0];
+                    qJson.votedByMe = true;
+                    qJson.myAnswer = userVote.get('ans').id;
+                }
+                resultJson.push(qJson);
+            });
+        });
+
+        return promise;
+    }).then(function() {
+        response.success(resultJson);
+    }, function(error) {
+        response.error(error);
+    });
+});
+
+Parse.Cloud.job("resetVoteCount", function(request, status) {
+    //Set up to modify user data
+    //Parse.Cloud.useMasterKey();
+    var Ans = Parse.Object.extend("Answer");
+    var query = new Parse.Query(Ans);
+    query.each(function(ansObj) {
+        // Update to plan value passed in
+        ansObj.set("count", 0);
+        return ansObj.save();
+    }).then(function() {
+        status.success("Trend score zeroing done.");
+    }, function(error) {
+        status.error("Trend score zeroing, something went wrong.");
+    });
+});
+
+Parse.Cloud.job("resetQuestionCount", function(request, status) {
+    //Set up to modify user data
+    //Parse.Cloud.useMasterKey();
+    var Ques = Parse.Object.extend("Question");
+    var query = new Parse.Query(Ques);
+    query.each(function(qObj) {
+        // Update to plan value passed in
+        qObj.set("mcount", 0);
+        qObj.set("trendscore", 0);
+        qObj.set("countteen", 0);
+        qObj.set("count20plus", 0);
+        qObj.set("count30plus", 0);
+        qObj.set("count40plus", 0);
+        return qObj.save();
+    }).then(function() {
+        status.success("Trend score zeroing done.");
+    }, function(error) {
+        status.error("Trend score zeroing, something went wrong.");
+    });
 });

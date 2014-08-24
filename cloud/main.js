@@ -677,7 +677,7 @@ Parse.Cloud.define("queryFeed", function(request, response) {
                     qJson.ma = userVote.get('ans').id;
                 }else{
                     qJson.v = false;
-                    qJson.ma = null;
+                    qJson.ma = "";
                 }
                 resultJson.push(qJson);
             });

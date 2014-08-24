@@ -15,8 +15,8 @@ exports.questionToJson = function(qObj){
     if (typeof(ans1Obj) != "undefined"){
         qJson.a1 = {
             'i' : ans1Obj.id,
-            'c' : ans1Obj.get("text"),
-            't' : ans1Obj.get("count")
+            'c' : ans1Obj.get("count"),
+            't' : ans1Obj.get("text")
         };
     }
 
@@ -24,8 +24,8 @@ exports.questionToJson = function(qObj){
     if (typeof(ans2Obj) != "undefined"){
         qJson.a2 = {
             'i' : ans2Obj.id,
-            'c' : ans2Obj.get("text"),
-            't' : ans2Obj.get("count")
+            'c' : ans2Obj.get("count"),
+            't' : ans2Obj.get("text")
         };
     }
 
@@ -33,8 +33,8 @@ exports.questionToJson = function(qObj){
     if (typeof(ans3Obj) != "undefined"){
         qJson.a3 = {
             'i' : ans3Obj.id,
-            'c' : ans3Obj.get("text"),
-            't' : ans3Obj.get("count")
+            'c' : ans3Obj.get("count"),
+            't' : ans3Obj.get("text")
         };
     }
 
@@ -42,8 +42,8 @@ exports.questionToJson = function(qObj){
     if (typeof(ans4Obj) != "undefined"){
         qJson.a4 = {
             'i' : ans4Obj.id,
-            'c' : ans4Obj.get("text"),
-            't' : ans4Obj.get("count")
+            'c' : ans4Obj.get("count"),
+            't' : ans4Obj.get("text")
         };
     }
 
@@ -51,8 +51,8 @@ exports.questionToJson = function(qObj){
     if (typeof(ans5Obj) != "undefined"){
         qJson.a5 = {
             'i' : ans5Obj.id,
-            'c' : ans5Obj.get("text"),
-            't' : ans5Obj.get("count")
+            'c' : ans5Obj.get("count"),
+            't' : ans5Obj.get("text")
         };
     }
 

@@ -670,7 +670,7 @@ Parse.Cloud.define("queryFeed", function(request, response) {
             promise = promise.then(function() {
                 return voteQuery.find();
             }).then(function(votes){
-                var qJson = result.toJSON();
+                var qJson = conv.questionToJson(result);
                 if(votes.length > 0){
                     var userVote = votes[0];
                     qJson.votedByMe = true;

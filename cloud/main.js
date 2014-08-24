@@ -673,11 +673,11 @@ Parse.Cloud.define("queryFeed", function(request, response) {
                 var qJson = conv.questionToJson(result);
                 if(votes.length > 0){
                     var userVote = votes[0];
-                    qJson.votedByMe = true;
-                    qJson.myAnswer = userVote.get('ans').id;
+                    qJson.v = true;
+                    qJson.ma = userVote.get('ans').id;
                 }else{
-                    qJson.votedByMe = false;
-                    qJson.myAnswer = null;
+                    qJson.v = false;
+                    qJson.ma = null;
                 }
                 resultJson.push(qJson);
             });

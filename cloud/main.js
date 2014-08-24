@@ -635,6 +635,9 @@ Parse.Cloud.define("userAnswered", function(request, response) {
 
 Parse.Cloud.define("queryFeed", function(request, response) {
     Parse.Cloud.useMasterKey();
+
+    var conv = require('cloud/questionConverter.js');
+
     var query = new Parse.Query("Question");
     query.include("answer1");
     query.include("answer2");

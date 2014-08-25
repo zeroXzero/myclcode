@@ -794,11 +794,11 @@ Parse.Cloud.job("transformAnsTable", function(request, status) {
     query.include("answer4");
     query.include("answer5");
     query.each(function(qObj) {
-        var ans1Obj = result.get("answer1");
-        var ans2Obj = result.get("answer2");
-        var ans3Obj = result.get("answer3");
-        var ans4Obj = result.get("answer4");
-        var ans5Obj = result.get("answer5");
+        var ans1Obj = qObj.get("answer1");
+        var ans2Obj = qObj.get("answer2");
+        var ans3Obj = qObj.get("answer3");
+        var ans4Obj = qObj.get("answer4");
+        var ans5Obj = qObj.get("answer5");
 
         if (typeof(ans1Obj) != "undefined")
         {

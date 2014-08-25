@@ -674,10 +674,10 @@ Parse.Cloud.define("queryFeed", function(request, response) {
                 if(votes.length > 0){
                     var userVote = votes[0];
                     qJson.v = true;
-                    qJson.ma = userVote.get('ans').id;
+                    qJson.ma = userVote.get('ans');
                 }else{
                     qJson.v = false;
-                    qJson.ma = "";
+                    qJson.ma = 0;
                 }
                 resultJson.push(qJson);
             });

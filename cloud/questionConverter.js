@@ -11,49 +11,69 @@ exports.questionToJson = function(qObj){
     qJson.ui = user.id;
     qJson.un = user.get("name");
 
-    var ans1Obj = qObj.get("answer1");
-    if (typeof(ans1Obj) != "undefined"){
+    var ans1Text = qObj.get("ans1_text");
+    var ans1Count = qObj.get("ans1_count");
+    if (ans1Text != null){
         qJson.a1 = {
-            'i' : ans1Obj.id,
-            'c' : ans1Obj.get("count"),
-            't' : ans1Obj.get("text")
+            't' : ans1Text
         };
+        var count1 = 0;
+        if(ans1Count != null){
+            count1 = ans1Count;
+        }
+        qJson.a1.c = count1;
     }
 
-    var ans2Obj = qObj.get("answer2");
-    if (typeof(ans2Obj) != "undefined"){
+    var ans2Text = qObj.get("ans2_text");
+    var ans2Count = qObj.get("ans2_count");
+    if (ans2Text != null){
         qJson.a2 = {
-            'i' : ans2Obj.id,
-            'c' : ans2Obj.get("count"),
-            't' : ans2Obj.get("text")
+            't' : ans2Text
         };
+        var count2 = 0;
+        if(ans2Count != null){
+            count2 = ans2Count;
+        }
+        qJson.a2.c = count2;
     }
 
-    var ans3Obj = qObj.get("answer3");
-    if (typeof(ans3Obj) != "undefined"){
+    var ans3Text = qObj.get("ans3_text");
+    var ans3Count = qObj.get("ans3_count");
+    if (ans3Text != null){
         qJson.a3 = {
-            'i' : ans3Obj.id,
-            'c' : ans3Obj.get("count"),
-            't' : ans3Obj.get("text")
+            't' : ans3Text
         };
+        var count3 = 0;
+        if(ans3Count != null){
+            count3 = ans3Count;
+        }
+        qJson.a3.c = count3;
     }
 
-    var ans4Obj = qObj.get("answer4");
-    if (typeof(ans4Obj) != "undefined"){
+    var ans4Text = qObj.get("ans4_text");
+    var ans4Count = qObj.get("ans4_count");
+    if (ans4Text != null){
         qJson.a4 = {
-            'i' : ans4Obj.id,
-            'c' : ans4Obj.get("count"),
-            't' : ans4Obj.get("text")
+            't' : ans4Text
         };
+        var count4 = 0;
+        if(ans4Count != null){
+            count4 = ans4Count;
+        }
+        qJson.a1.c = count4;
     }
 
-    var ans5Obj = qObj.get("answer5");
-    if (typeof(ans5Obj) != "undefined"){
+    var ans5Text = qObj.get("ans5_text");
+    var ans5Count = qObj.get("ans5_count");
+    if (ans5Text != null){
         qJson.a5 = {
-            'i' : ans5Obj.id,
-            'c' : ans5Obj.get("count"),
-            't' : ans5Obj.get("text")
+            't' : ans5Text
         };
+        var count5 = 0;
+        if(ans1Count != null){
+            count5 = ans5Count;
+        }
+        qJson.a5.c = count5;
     }
 
     return qJson;

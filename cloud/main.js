@@ -782,3 +782,53 @@ Parse.Cloud.job("updateZscore", function(request, status) {
 		status.error("Something went wrong with scoredata updation.");
 	});
 });
+
+Parse.Cloud.job("transformAnsTable", function(request, status) {
+    //Set up to modify user data
+    Parse.Cloud.useMasterKey();
+    var Ques = Parse.Object.extend("Question");
+    var query = new Parse.Query(Ques);
+    query.include("answer1");
+    query.include("answer2");
+    query.include("answer3");
+    query.include("answer4");
+    query.include("answer5");
+    query.each(function(qObj) {
+        var ans1Obj = result.get("answer1");
+        var ans2Obj = result.get("answer2");
+        var ans3Obj = result.get("answer3");
+        var ans4Obj = result.get("answer4");
+        var ans5Obj = result.get("answer5");
+
+        if (typeof(ans1Obj) != "undefined")
+        {
+            qObj.set("ans1_text", ans1Obj.get("text"));
+            qObj.set("ans1_count", 0);
+        }
+        if (typeof(ans2Obj) != "undefined")
+        {
+            qObj.set("ans2_text", ans2Obj.get("text"));
+            qObj.set("ans2_count", 0);
+        }
+        if (typeof(ans3Obj) != "undefined")
+        {
+            qObj.set("ans3_text", ans3Obj.get("text"));
+            qObj.set("ans3_count", 0);
+        }
+        if (typeof(ans4Obj) != "undefined")
+        {
+            qObj.set("ans4_text", ans4Obj.get("text"));
+            qObj.set("ans4_count", 0);
+        }
+        if (typeof(ans5Obj) != "undefined")
+        {
+            qObj.set("ans5_text", ans5Obj.get("text"));
+            qObj.set("ans5_count", 0);
+        }
+        return qObj.save();
+    }).then(function() {
+        status.success("Answer table transformed.");
+    }, function(error) {
+        status.error("Answer export failed.");
+    });
+});

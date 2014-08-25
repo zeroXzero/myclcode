@@ -645,7 +645,7 @@ Parse.Cloud.define("queryFeed", function(request, response) {
     query.include("answer4");
     query.include("answer5");
     query.include("user");
-    query.descending("updatedAt");
+    query.descending("createdAt");
 
     query.limit(request.params.limit);
     query.skip(request.params.skip);

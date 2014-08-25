@@ -661,7 +661,6 @@ Parse.Cloud.define("queryFeed", function(request, response) {
             var relation = result.relation("votes");
             var voteQuery = relation.query();
             voteQuery.include("user");
-            voteQuery.include("ans");
             voteQuery.limit(1);
             voteQuery.equalTo("user",{
                 __type: "Pointer",

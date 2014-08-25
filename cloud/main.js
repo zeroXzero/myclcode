@@ -158,7 +158,7 @@ Parse.Cloud.beforeSave("Answer", function(request, response) {
 		if (typeof(qsObj) != "undefined")
 		{
 			qs.id = request.object.get("ptrQuestion").id;
-			qs.increment('trendscore');
+			qs.increment('slotVal');
 			if (typeof(user) != "undefined" && user != null)
 			{
 				//Update user's answer count (for notification)
@@ -259,7 +259,7 @@ Parse.Cloud.job("tscoreZeroing", function(request, status) {
 	var query = new Parse.Query(Quest);
 	query.each(function(qs) {
 		// Update to plan value passed in
-		qs.set("trendscore", 0);
+		qs.set("slotVal", 0);
 		return qs.save();
 	}).then(function() {
 		status.success("Trend score zeroing done.");
@@ -543,7 +543,7 @@ Parse.Cloud.define("trendingFeed", function(request, response) {
 	query.include("answer3");
 	query.include("answer4");
 	query.include("answer5");
-	query.descending("trendscore");
+	query.descending("zscore");
 	query.limit(request.params.count);
 	query.skip(request.params.skipcnt);
 
@@ -715,7 +715,7 @@ Parse.Cloud.job("resetQuestionCount", function(request, status) {
     query.each(function(qObj) {
         // Update to plan value passed in
         qObj.set("mcount", 0);
-        qObj.set("trendscore", 0);
+        qObj.set("slotVal", 0);
         qObj.set("countteen", 0);
         qObj.set("count20plus", 0);
         qObj.set("count30plus", 0);
@@ -726,4 +726,59 @@ Parse.Cloud.job("resetQuestionCount", function(request, status) {
     }, function(error) {
         status.error("Trend score zeroing, something went wrong.");
     });
+});
+
+
+Parse.Cloud.job("updateZscore", function(request, status) {
+	//Set up to modify user data
+	//Parse.Cloud.useMasterKey();
+	var Quest = Parse.Object.extend("Question");
+	var query = new Parse.Query(Quest);
+	query.include("zscore");
+	query.include("avg");
+	query.include("sqrAvg");
+	query.include("slotVal");
+
+	var decay = 0.8;
+
+	query.each(function(qs) {
+	
+	var avg = qs.get("avg");
+	var sqrAvg = qs.get("sqrAvg");
+	var slotVal = qs.get("slotVal");
+	var zscore = -Number.MAX_VALUE;
+
+
+	if(avg == 0 && sqrAvg == 0)
+	{
+		avg = slotVal; 
+		sqrAvg = Math.pow(slotVal,2); 
+	}
+		else
+	{
+		avg = avg * decay + slotVal * (1 - decay);
+		sqrAvg = sqrAvg * decay + Math.pow(slotVal,2) * (1 - decay);
+	}
+
+	var stdDev = Math.sqrt(sqrAvg - Math.pow(slotVal,2));
+	if(stdDev)
+	{
+		zscore = (slotVal-avg)/stdDev; 
+	}
+	else
+	{
+		zscore = (slotVal-avg)*-Number.MAX_VALUE; 
+	}
+
+	// Update to plan value passed in
+	qs.set("slotVal", 0);
+	qs.set("zscore", zscore);
+	qs.set("avg", avg);
+	qs.set("sqrAvg", sqrAvg);
+	return qs.save();
+	}).then(function() {
+		status.success("Updated scoring data");
+	}, function(error) {
+		status.error("Something went wrong with scoredata updation.");
+	});
 });

@@ -337,38 +337,28 @@ angular.module('project41', ['ionic'])
             cat.id = $scope.question.cat;
             q.set("category", cat);
 
+            q.set("count", 0);
             q.set("user", user);
             q.set("tags", []);
             q.set("words", []);
 
-            var ans1 = new ansClass();
-            ans1.set("text", qObject.answer1);
-            ans1.set("count", 0);
-			ans1.set("ptrQuestion",null);
-            q.set("answer1", ans1);
+            q.set("ans1_text", qObject.answer1);
+            q.set("ans1_count", 0);
 
-            var ans2 = new ansClass();
-            ans2.set("text", qObject.answer2);
-            ans2.set("count", 0);
-            q.set("answer2", ans2);
+            q.set("ans2_text", qObject.answer2);
+            q.set("ans2_count", 0);
 
             if(qObject.answer3 != null){
-                var ans3 = new ansClass();
-                ans3.set("text", qObject.answer3);
-                ans3.set("count", 0);
-                q.set("answer3", ans3);
+                q.set("ans3_text", qObject.answer3);
+                q.set("ans3_count", 0);
             }
             if(qObject.answer4 != null){
-                var ans4 = new ansClass();
-                ans4.set("text", qObject.answer4);
-                ans4.set("count", 0);
-                q.set("answer4", ans4);
+                q.set("ans4_text", qObject.answer4);
+                q.set("ans4_count", 0);
             }
             if(qObject.answer5 != null){
-                var ans5 = new ansClass();
-                ans5.set("text", qObject.answer5);
-                ans5.set("count", 0);
-                q.set("answer5", ans5);
+                q.set("ans5_text", qObject.answer5);
+                q.set("ans5_count", 0);
             }
 
             q.save(null, {

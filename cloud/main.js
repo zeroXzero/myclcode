@@ -234,19 +234,21 @@ Parse.Cloud.afterSave("Vote", function(request) {
 	Parse.Cloud.useMasterKey();
 	//console.log("Object didn't exist");
 	//var user = Parse.User.current();
-	var ansObj = request.object.get("ans");
+	var qObj = request.object.get("question");
 
 	//console.log("user,"+user);
 	//console.log("user,"+user.id);
 
 	//Update user's question count (for notification)
-	if (typeof(ansObj)!="undefined" &&  ansObj != null)
+	if (typeof(qObj)!="undefined" &&  qObj != null)
 	{
-		var voteRelation = ansObj.relation("votes");
-		voteRelation.add(request.object);
-		ansObj.save();
-		console.log('Added vote relation');
+		var voteRelation = qObj.relation("votes");
+        var votePtr = new Parse.Object("Vote");
+        votePtr.id = request.object.id;
 
+		voteRelation.add(votePtr);
+        qObj.save();
+		console.log('Added vote relation');
 	}
 
 });

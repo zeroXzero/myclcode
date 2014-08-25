@@ -718,6 +718,10 @@ Parse.Cloud.job("resetQuestionCount", function(request, status) {
         // Update to plan value passed in
         qObj.set("mcount", 0);
         qObj.set("slotVal", 0);
+		qObj.set("slotVal", 0);
+		qObj.set("zscore", 0);
+		qObj.set("avg", 0);
+		qObj.set("sqrAvg", 0);
         qObj.set("countteen", 0);
         qObj.set("count20plus", 0);
         qObj.set("count30plus", 0);
@@ -736,20 +740,21 @@ Parse.Cloud.job("updateZscore", function(request, status) {
 	//Parse.Cloud.useMasterKey();
 	var Quest = Parse.Object.extend("Question");
 	var query = new Parse.Query(Quest);
-	query.include("zscore");
-	query.include("avg");
-	query.include("sqrAvg");
-	query.include("slotVal");
+	//query.include("zscore");
+	//query.include("avg");
+	//query.include("sqrAvg");
+	//query.include("slotVal");
 
 	var decay = 0.8;
 
 	query.each(function(qs) {
 	
+	console.log("Inside updatezscore___,");
 	var avg = qs.get("avg");
 	var sqrAvg = qs.get("sqrAvg");
 	var slotVal = qs.get("slotVal");
 	var zscore = -Number.MAX_VALUE;
-
+	
 
 	if(avg == 0 && sqrAvg == 0)
 	{
@@ -771,6 +776,7 @@ Parse.Cloud.job("updateZscore", function(request, status) {
 	{
 		zscore = (slotVal-avg)*-Number.MAX_VALUE; 
 	}
+	
 
 	// Update to plan value passed in
 	qs.set("slotVal", 0);
@@ -781,7 +787,7 @@ Parse.Cloud.job("updateZscore", function(request, status) {
 	}).then(function() {
 		status.success("Updated scoring data");
 	}, function(error) {
-		status.error("Something went wrong with scoredata updation.");
+		status.error("Something went wrong with scoredata updation,"+error.message);
 	});
 });
 

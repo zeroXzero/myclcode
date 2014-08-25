@@ -60,7 +60,7 @@ exports.questionToJson = function(qObj){
         if(ans4Count != null){
             count4 = ans4Count;
         }
-        qJson.a1.c = count4;
+        qJson.a4.c = count4;
     }
 
     var ans5Text = qObj.get("ans5_text");

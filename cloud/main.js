@@ -692,6 +692,77 @@ Parse.Cloud.define("queryFeed", function(request, response) {
     });
 });
 
+Parse.Cloud.define("optqueryFeed", function(request, response) {
+	Parse.Cloud.useMasterKey();
+
+	var conv = require('cloud/questionConverter.js');
+
+	var query = new Parse.Query("Question");
+	query.include("answer1");
+	query.include("answer2");
+	query.include("answer3");
+	query.include("answer4");
+	query.include("answer5");
+	query.include("user");
+	query.descending("createdAt");
+
+	query.limit(request.params.limit);
+	query.skip(request.params.skip);
+
+	var resultJson = [];
+
+	query.find({
+		success: function(results) {
+			var objidArr = new Array(results.length);
+			for (var i = 0; i < results.length; i++) {
+				objidArr[i]=results[i].id;
+			}
+
+			var pointers = _.map(objidArr, function(objid) {
+				var pointer = new Parse.Object("Question");
+				pointer.id = objid;
+				return pointer;
+			});
+
+			var votequery = new Parse.Query("Vote");
+			votequery.equalTo("user",{
+				__type: "Pointer",
+				className: "_User",
+				objectId: request.params.userId 
+			});
+			votequery.containedIn("question", pointers);
+
+			votequery.find({
+				success:function(votes){
+					for (var i = 0; i < results.length; i++) {
+						var qJson = conv.questionToJson(results[i]);
+						for (var j = 0; j < votes.length; j++) {
+							if(votes[j].get("question").id == results[i].id){
+								var userVote = votes[j];
+								qJson.v = true;
+								qJson.ma = userVote.get('ans');
+								break;
+							}else{
+								qJson.v = false;
+								qJson.ma = 0;
+							}
+						}
+						resultJson.push(qJson);
+					}
+					response.success(resultJson);
+				},
+				error: function() {
+					response.error("Vote lookup failed");
+				}
+			});
+		}
+				 ,
+				 error: function() {
+					 response.error("Question lookup failed");
+				 }
+	});
+});
+
 Parse.Cloud.job("resetVoteCount", function(request, status) {
     //Set up to modify user data
     //Parse.Cloud.useMasterKey();

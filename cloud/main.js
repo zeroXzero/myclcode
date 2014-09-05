@@ -635,7 +635,7 @@ Parse.Cloud.define("userAnswered", function(request, response) {
 	});
 });
 
-Parse.Cloud.define("queryFeed", function(request, response) {
+Parse.Cloud.define("queryFeedorg", function(request, response) {
     Parse.Cloud.useMasterKey();
 
     var conv = require('cloud/questionConverter.js');
@@ -692,7 +692,7 @@ Parse.Cloud.define("queryFeed", function(request, response) {
     });
 });
 
-Parse.Cloud.define("optqueryFeed", function(request, response) {
+Parse.Cloud.define("queryFeed", function(request, response) {
 	Parse.Cloud.useMasterKey();
 
 	var conv = require('cloud/questionConverter.js');

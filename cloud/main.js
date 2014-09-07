@@ -736,15 +736,14 @@ Parse.Cloud.define("queryFeed", function(request, response) {
 				success:function(votes){
 					for (var i = 0; i < results.length; i++) {
 						var qJson = conv.questionToJson(results[i]);
+						qJson.v = false;
+						qJson.ma = 0;
 						for (var j = 0; j < votes.length; j++) {
 							if(votes[j].get("question").id == results[i].id){
 								var userVote = votes[j];
 								qJson.v = true;
 								qJson.ma = userVote.get('ans');
 								break;
-							}else{
-								qJson.v = false;
-								qJson.ma = 0;
 							}
 						}
 						resultJson.push(qJson);

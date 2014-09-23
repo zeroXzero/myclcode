@@ -10,7 +10,10 @@ exports.questionToJson = function(qObj){
     var user = qObj.get("user");
     qJson.ui = user.id;
     qJson.un = user.get("name");
-	qJson.g = user.get("img").url();
+	var img = user.get("img");
+	if(img != null && typeof img != "undefined"){
+		qJson.g = img.url();
+	}
 
     var ans1Text = qObj.get("ans1_text");
     var ans1Count = qObj.get("ans1_count");
